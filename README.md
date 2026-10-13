@@ -1,4 +1,4 @@
-# IPA Architecture 3D Plugin 2.0
+# IPA Architecture 3D Plugin 2.1
 
 **默认语言：简体中文（zh-CN）**。可通过生成器的 `--lang ja-JP` 或 `--lang en-US` 切换，也可添加完整语言字典扩展。日本 IPA 标准资料是架构审查参考，不存在官方的“12 View 强制标准”或本插件的 IPA 认证。
 

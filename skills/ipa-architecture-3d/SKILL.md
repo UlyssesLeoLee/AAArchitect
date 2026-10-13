@@ -3,7 +3,7 @@ name: ipa-architecture-3d
 description: 将需求/基本设计/源码/架构JSON生成真实 Three.js WebGL 三维交互架构网站，以 X/Y/Z 可追溯语义属性动态重组 12 种 View，检测空间信息增益与跨信任域关系，按 IPA 参考要求自审。默认简体中文，可通过 --lang ja-JP/en-US 选择其他语言。
 compatibility: Python 3.10+; Node.js 20+; npm access for Three.js/Vite; WebGL2 browser for actual 3D rendering.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   default_language: "zh-CN"
   renderer: "three.js"
 ---
