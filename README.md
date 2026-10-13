@@ -98,6 +98,23 @@ hermes plugins enable ipa-architecture-3d
 
 Hermes 扫描 `$env:LOCALAPPDATA\hermes\plugins\<插件名>\`，根目录 `plugin.json` 会作为 portable Agent Plugins v1 包被发现。`hermes plugins doctor <路径>` 可在不启用的情况下验证运行时契约。portable 包默认处于禁用状态，需要 `hermes plugins enable`；该步骤会触发 PM 的 venv 同步。
 
+**注意：Hermes 的供应链扫描会拦截本插件。** 从 Git URL 安装时会被判为 `CAUTION` 并默认 BLOCKED，必须显式放行：
+
+```powershell
+hermes plugins install https://github.com/UlyssesLeoLee/AAArchitect.git --force
+```
+
+实测的 6 项发现逐条核对后全部是启发式误报：
+
+| 判据 | 位置 | 实际情况 |
+| --- | --- | --- |
+| `execution` (HIGH) | `assets/viewer/src/main.js:241` | 搜索过滤用的模板字符串，渲染走 `textContent`，不执行任何 shell |
+| `supply_chain` (MEDIUM) | `README.md` 的安装说明 | 文档里的 `git clone` 命令被当成供应链风险 |
+| `supply_chain` (MEDIUM) | `assets/viewer/src/i18n.js:3` / `:6` | 中/日文界面文案被当成可疑非 ASCII 字符串 |
+| `supply_chain` (MEDIUM) | `SKILL.md:28` | `npm install && npm run test && npm run build` 构建步骤被当成包管理器调用 |
+
+这些由文档与多语言资源本身触发，不应为绕过扫描而删改。也可在 `config.yaml` 里设 `plugins.scan_on_install` 关闭拦截。技能通道 `hermes skills install <raw URL>` 不受此拦截影响。
+
 Skill 通道（不经过 PM）：
 
 ```powershell
