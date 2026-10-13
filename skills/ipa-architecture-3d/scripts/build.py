@@ -44,11 +44,11 @@ def run(argv=None):
     if out.exists() and any(out.iterdir()):print('ERROR 输出目录必须为空',file=sys.stderr);return 2
     shutil.copytree(template,out,dirs_exist_ok=True,ignore=shutil.ignore_patterns('node_modules','dist','.vite','__pycache__'))
     (out/'architecture.json').write_text(json.dumps(normalized,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
-    (out/'viewer-config.json').write_text(json.dumps({'language':args.lang,'renderer':'Three.js/WebGL','isSample':normalized['meta'].get('evidenceState')=='illustrative'},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+    (out/'viewer-config.json').write_text(json.dumps({'language':args.lang,'renderer':'Three.js/WebGL + SVG 2D','flatRenderer':'SVG (no WebGL)','isSample':normalized['meta'].get('evidenceState')=='illustrative'},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     html=(out/'index.html').read_text(encoding='utf8')
     html=re.sub(r'<html lang="[^"]+">',f'<html lang="{args.lang}">',html,count=1)
     (out/'index.html').write_text(html,encoding='utf8')
-    print(f'生成完成：{out}\n语言：{args.lang} · 渲染器：Three.js/WebGL（无 CSS 伪 3D）')
+    print(f'生成完成：{out}\n语言：{args.lang} · 渲染器：Three.js/WebGL 真实 3D + 原生 SVG 2D 平面（读者可切换，无 CSS 伪 3D）')
     print(f'运行：cd "{out}"; npm install; npm run dev')
     print('说明：当前环境若无法联网获取 npm 依赖，则需要在可连接 registry.npmjs.org 的环境安装。')
     for item in warns:print('WARN '+item)

@@ -17,14 +17,21 @@
    <section class="intro"><div><div class="kicker" id="view-index">01 / 12 · VIEW</div><h1 id="view-title">—</h1><p id="view-desc">—</p></div><div class="intro-stat"><span data-t="spatialFidelity">有效空间维数</span><strong id="depth-metric">—</strong></div></section>
    <section class="scene-card">
     <div class="scene-tools">
-      <div class="tool-tabs" role="group" aria-label="camera projection">
+      <div class="tool-tabs">
+        <div class="mode-tabs" role="group" aria-label="render mode">
+          <button type="button" data-mode="3d" class="selected" data-t="mode3d">3D 立体</button><button type="button" data-mode="2d" data-t="mode2d">2D 平面</button>
+        </div>
+        <div class="camera-tabs" role="group" aria-label="camera projection">
         <button type="button" data-camera="3d" class="selected" data-t="camera3d">3D 透视</button><button type="button" data-camera="top" data-t="cameraTop">俯视 XZ</button><button type="button" data-camera="front" data-t="cameraFront">正视 XY</button><button type="button" data-camera="side" data-t="cameraSide">侧视 ZY</button>
+        </div>
       </div>
       <div class="tool-actions"><button id="fit" type="button" data-t="fit">适配全图</button><button id="edge-toggle" type="button" aria-pressed="true" data-t="edges">关系线：显示</button><button id="layers-toggle" type="button" aria-pressed="true" data-t="layers">分层面：显示</button></div>
     </div>
-    <div id="scene" role="img" aria-label="Three.js true 3D architecture view">
+    <div id="scene" role="group">
+      <svg id="flat" class="flat-canvas" role="img" aria-label="2D architecture view" hidden></svg>
       <div class="fallback" id="webgl-error" hidden></div>
     </div>
+    <div class="flat-note" id="flat-note" hidden></div>
     <div class="scene-footer"><span id="scene-summary">—</span><span data-t="mouseHint">左键旋转 · 滚轮缩放 · 右键平移 · 点击节点查看证据</span></div>
    </section>
    <section class="axes-card">

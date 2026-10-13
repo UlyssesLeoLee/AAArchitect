@@ -3,6 +3,8 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import model from '../architecture.json';
 import config from '../viewer-config.json';
 import {DIM_FIELDS,AXIS_COLORS,dimensionPlan,crossingReport,NO_VALUE} from './layout.js';
+import {plan2d} from './flat.js';
+import {drawFlat} from './flat-view.js';
 import {getTranslation} from './i18n.js';
 import './style.css';
 
@@ -12,12 +14,12 @@ const $=id=>document.getElementById(id);
 const text=(k)=>tr[k]||k;
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nodeMap=new Map(model.nodes.map(n=>[n.id,n]));
-const state={view:0,axes:null,selected:null,showEdges:true,showLayers:true,projection:'3d',search:'',filters:{x:null,y:null,z:null},renderReady:false,animationStart:0,animateMs:860};
+const state={view:0,axes:null,selected:null,showEdges:true,showLayers:true,projection:'3d',mode:'3d',search:'',filters:{x:null,y:null,z:null},renderReady:false,animationStart:0,animateMs:860};
 const classColors={actor:0xf2c17e,external:0xf2c17e,system:0x76cfe3,gateway:0x76cfe3,service:0x76cfe3,module:0x76cfe3,process:0x9baff4,runtime:0x9baff4,plugin:0x9baff4,database:0x70dbb9,storage:0x70dbb9,data:0x70dbb9,security:0xf2c17e,operations:0x70dbb9};
 const sceneContainer=$('scene');
-let renderer,scene,perspCamera,orthoCamera,activeCamera,controls,raycaster;
+let renderer,scene,perspCamera,orthoCamera,activeCamera,controls,raycaster,canvasEl;
 let nodesGroup,edgesGroup,axesGroup,layerGroup;
-let layout,report,animation=0;
+let layout,report,animation=0,flatPlan=null;
 const nodeObjs=new Map(),edgeObjs=new Map();
 const disposables=[];
 function uiInit(){
@@ -52,6 +54,7 @@ function uiInit(){
  $('search').oninput=e=>{state.search=e.target.value;renderList()};
  for(const axis of ['x','y','z'])$(`axis-${axis}-filter`).onchange=e=>{state.filters[axis]=e.target.value||null;applyFocus()};
  document.querySelectorAll('[data-camera]').forEach(btn=>btn.onclick=()=>setProjection(btn.dataset.camera));
+ document.querySelectorAll('[data-mode]').forEach(btn=>btn.onclick=()=>setMode(btn.dataset.mode));
  syncToggles();
 }
 function syncToggles(){
@@ -80,7 +83,7 @@ function buildScene(){
  renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'});
  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(width,height);
  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;
- renderer.toneMappingExposure=1.16;sceneContainer.append(renderer.domElement);
+ renderer.toneMappingExposure=1.16;sceneContainer.append(renderer.domElement);canvasEl=renderer.domElement;
  perspCamera=new THREE.PerspectiveCamera(40,width/height,.2,2000);
  orthoCamera=new THREE.OrthographicCamera(-16*width/height,16*width/height,16,-16,.1,2000);
  activeCamera=perspCamera;controls=new OrbitControls(activeCamera,renderer.domElement);
@@ -192,11 +195,39 @@ function activateLayout(resetCamera){
  }
  for(const e of edgeObjs.values())e.active=report.edges.some(r=>r.id===e.edge.id);
  if(state.renderReady){rebuildScaffold();if(resetCamera)fitCamera();}
+ // The 2D map is planned from the same axes, so it can never claim different fields.
+ flatPlan=plan2d(model,view,state.axes);
  applyFocus();renderDetail();
 }
 function resize(){if(!renderer)return;const w=Math.max(1,sceneContainer.clientWidth),h=Math.max(1,sceneContainer.clientHeight);
  renderer.setSize(w,h);perspCamera.aspect=w/h;perspCamera.updateProjectionMatrix();orthoCamera.left=-16*w/h;orthoCamera.right=16*w/h;orthoCamera.top=16;orthoCamera.bottom=-16;orthoCamera.updateProjectionMatrix();fitCamera();}
 function setProjection(mode){state.projection=mode;document.querySelectorAll('[data-camera]').forEach(b=>b.classList.toggle('selected',b.dataset.camera===mode));activeCamera=mode==='3d'?perspCamera:orthoCamera;controls.object=activeCamera;fitCamera();}
+/** Reader-facing choice between the real 3D scene and the real 2D map.
+ * 2D is an explicit selection, never a silent downgrade of a WebGL failure. */
+function setMode(mode){
+ state.mode=mode;
+ const flat=mode==='2d';
+ document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));
+ $('flat').hidden=!flat;
+ if(canvasEl)canvasEl.hidden=flat;
+ $('flat-note').hidden=!flat;
+ document.querySelectorAll('[data-camera]').forEach(b=>b.disabled=flat||!state.renderReady);
+ $('layers-toggle').disabled=flat;$('fit').disabled=flat;
+ if(flat&&state.axes){flatPlan=plan2d(model,model.views[state.view],state.axes)}
+ renderFlat();
+}
+function renderFlat(){
+ if(state.mode!=='2d'||!flatPlan||!report)return;
+ drawFlat($('flat'),{plan:flatPlan,model,report,state,classColors,tr,text,onSelect:selectNode});
+ // Spell out what each axis actually contributed instead of just naming it.
+ const roles={column:text('axisRoleColumn'),row:text('axisRoleRow'),group:text('axisRoleGroup'),none:text('flatZNone')};
+ const sentence=flatPlan.axisMeta.map(m=>{
+  const label=tr.fieldLabel[m.field]||m.field;
+  const gain=m.axis==='x'?`${text('incremental')} ${m.incremental}`:`${text('incremental')} +${m.incremental}`;
+  return `${m.axis.toUpperCase()}=${label}（${roles[m.role]||m.role}${m.effective?'':' · '+text('collapsed')} · ${m.size} ${text('categories')} · ${gain}）`;
+ }).join(' · ');
+ $('flat-note').textContent=`${text('flatNote')}：${sentence}`;
+}
 function fitCamera(){if(!layout||!state.renderReady)return;
  const b=layout.bounds;const center=new THREE.Vector3((b.minX+b.maxX)/2,(b.minY+b.maxY)/2,(b.minZ+b.maxZ)/2);
  const dx=Math.max(7,b.maxX-b.minX+10),dy=Math.max(6,b.maxY-b.minY+9),dz=Math.max(8,b.maxZ-b.minZ+12);
@@ -225,7 +256,7 @@ function onPick(event){if(!layout||!renderer)return;
  const pick=raycaster.intersectObjects(candidates,false).find(hit=>hit.object.userData.nodeId);
  if(pick)selectNode(pick.object.userData.nodeId);
 }
-function selectNode(id){state.selected=id;renderDetail();renderList();}
+function selectNode(id){state.selected=id;renderDetail();renderList();renderFlat();}
 function matchesFocus(id){
  const p=layout?.positions[id];if(!p)return false;
  return ['x','y','z'].every(a=>!state.filters[a]||p.category[a]===state.filters[a]);
@@ -235,6 +266,7 @@ function applyFocus(){
  renderList();
  const count=model.views[state.view].nodeIds.filter(matchesFocus).length;
  $('scene-summary').textContent=`${count}/${model.views[state.view].nodeIds.length} ${text('elements')} · ${report.edges.length} ${text('relations')} · ${layout.depth}/3 ${text('depth')}`;
+ renderFlat();
 }
 function renderList(){
  const view=model.views[state.view],root=$('nodes');root.replaceChildren();let count=0;
@@ -257,6 +289,8 @@ function renderDetail(){
  el.innerHTML=`<h3>${escape(n.name)}</h3><p class="detail-description">${escape(n.description)}</p>${active?'':`<p class="detail-description">${escape(text('notInView'))}</p>`}${rows.map(([a,b])=>`<div class="kv"><b>${escape(a)}</b><span>${escape(b)}</span></div>`).join('')}`;
 }
 function frame(now){requestAnimationFrame(frame);
+ // While the reader is on the 2D map the WebGL scene is parked; SVG redraws on state change.
+ if(state.mode!=='3d'||!renderer)return;
  const fraction=Math.min(1,(now-state.animationStart)/(window.matchMedia('(prefers-reduced-motion: reduce)').matches?1:state.animateMs));
  const ease=1-Math.pow(1-fraction,3);
  for(const [id,o] of nodeObjs){if(!o.group.visible)continue;
@@ -286,10 +320,14 @@ function frame(now){requestAnimationFrame(frame);
  controls.update();renderer.render(scene,activeCamera);
 }
 function errorScene(error){
+ state.renderReady=false;
  $('webgl-error').hidden=false;
  $('webgl-error').textContent=`${text('errorPrefix')} ${error?.message||''}`;
  console.error('True Three.js 3D unavailable:',error);
  document.querySelectorAll('[data-camera]').forEach(b=>b.disabled=true);
+ // Offer the honest alternative, but say plainly that the 3D scene did not start.
+ if(state.mode!=='2d')setMode('2d');
+ $('webgl-error').textContent=`${text('errorPrefix')} ${error?.message||''} — ${text('flatFallbackNote')}`;
 }
 uiInit();
 try{buildScene();setView(0)}catch(error){errorScene(error);setView(0)}
