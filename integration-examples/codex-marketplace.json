@@ -1,0 +1,20 @@
+{
+  "name": "local-architecture",
+  "interface": {
+    "displayName": "Private Architecture Tools"
+  },
+  "plugins": [
+    {
+      "name": "ipa-architecture-3d",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ipa-architecture-3d"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

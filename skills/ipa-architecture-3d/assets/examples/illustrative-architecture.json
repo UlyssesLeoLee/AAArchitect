@@ -1,0 +1,3135 @@
+{
+  "meta": {
+    "system": "沙盒编排系统（虚构示例）",
+    "version": "2.0.0",
+    "updatedAt": "2026-10-13",
+    "owner": "虚构示例",
+    "description": "用于验证多视图切换与空间重组的虚构演示，不代表 SandTree 的实际设计。",
+    "evidenceState": "illustrative",
+    "sources": [
+      "本包内的虚构示例"
+    ],
+    "scope": "环境管理、适配器、执行与监控",
+    "constraints": [
+      "应用于真实系统前必须核实设计依据"
+    ],
+    "decisions": [
+      "通过适配器隔离运行时依赖（虚构方案）"
+    ],
+    "qualityAttributes": [
+      "权限控制",
+      "可用性",
+      "可维护性",
+      "可扩展性"
+    ],
+    "language": "zh-CN",
+    "i18n": {
+      "ja-JP": {
+        "scope": "環境管理、アダプタ、実行、監視",
+        "system": "Sandbox Orchestrator（架空の構成例）",
+        "constraints": [
+          "実システムへの適用には設計根拠の確認が必要"
+        ],
+        "owner": "架空のサンプル",
+        "description": "ビュー切替・空間再構成を検証するための架空デモ。実際の SandTree 仕様を示すものではありません。",
+        "decisions": [
+          "アダプタでランタイム依存を分離（架空案）"
+        ],
+        "sources": [
+          "本パッケージ内の架空サンプル"
+        ],
+        "qualityAttributes": [
+          "権限制御",
+          "可用性",
+          "保守性",
+          "拡張性"
+        ]
+      },
+      "en-US": {
+        "scope": "Environment management, adapters, execution and monitoring",
+        "system": "Sandbox Orchestrator (Illustrative)",
+        "constraints": [
+          "Verify design evidence before applying to a real system"
+        ],
+        "owner": "Illustrative sample",
+        "description": "Illustrative demo for view switching and spatial reorganization; not the actual SandTree design.",
+        "decisions": [
+          "Separate runtime dependencies via adapters (illustrative)"
+        ],
+        "sources": [
+          "Illustrative sample bundled with the package"
+        ],
+        "qualityAttributes": [
+          "Access control",
+          "Availability",
+          "Maintainability",
+          "Extensibility"
+        ]
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "operator",
+      "name": "运维人员",
+      "kind": "actor",
+      "description": "通过界面查看环境及运行状态",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "用户",
+      "layer": "业务",
+      "repo": "client",
+      "runtime": "浏览器",
+      "environment": "外部",
+      "trustZone": "公开区",
+      "opsLayer": "运维",
+      "integrationLayer": "用户",
+      "extensionLayer": "用户",
+      "failureDomain": "用户",
+      "domain": "操作主体",
+      "dataZone": "生成",
+      "i18n": {
+        "ja-JP": {
+          "layer": "業務",
+          "opsLayer": "運用",
+          "extensionLayer": "利用者",
+          "name": "運用担当者",
+          "description": "画面から環境・実行状況を確認",
+          "failureDomain": "利用者",
+          "integrationLayer": "利用者",
+          "trustZone": "公開",
+          "runtime": "ブラウザ",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "利用者"
+        },
+        "en-US": {
+          "layer": "Business",
+          "dataZone": "Generation",
+          "opsLayer": "Operations",
+          "domain": "Actors",
+          "environment": "External",
+          "extensionLayer": "Users",
+          "name": "Operator",
+          "description": "View environments and execution status",
+          "failureDomain": "Users",
+          "integrationLayer": "Users",
+          "trustZone": "Public Zone",
+          "runtime": "Browser",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "Users"
+        }
+      }
+    },
+    {
+      "id": "developer",
+      "name": "开发人员",
+      "kind": "actor",
+      "description": "向开发隔离环境发起操作",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "用户",
+      "layer": "业务",
+      "repo": "client",
+      "runtime": "浏览器",
+      "environment": "外部",
+      "trustZone": "公开区",
+      "opsLayer": "开发",
+      "integrationLayer": "用户",
+      "extensionLayer": "用户",
+      "failureDomain": "用户",
+      "domain": "操作主体",
+      "dataZone": "生成",
+      "i18n": {
+        "ja-JP": {
+          "layer": "業務",
+          "opsLayer": "開発",
+          "extensionLayer": "利用者",
+          "name": "開発担当者",
+          "description": "開発用隔離環境に操作を要求",
+          "failureDomain": "利用者",
+          "integrationLayer": "利用者",
+          "trustZone": "公開",
+          "runtime": "ブラウザ",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "利用者"
+        },
+        "en-US": {
+          "layer": "Business",
+          "dataZone": "Generation",
+          "opsLayer": "Development",
+          "domain": "Actors",
+          "environment": "External",
+          "extensionLayer": "Users",
+          "name": "Developer",
+          "description": "Request actions in isolated dev environments",
+          "failureDomain": "Users",
+          "integrationLayer": "Users",
+          "trustZone": "Public Zone",
+          "runtime": "Browser",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "Users"
+        }
+      }
+    },
+    {
+      "id": "web",
+      "name": "管理 Web 界面",
+      "kind": "module",
+      "description": "操作隔离环境并展示状态",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "UI",
+      "repo": "console",
+      "runtime": "浏览器",
+      "environment": "浏览器",
+      "trustZone": "公开区",
+      "opsLayer": "运维",
+      "integrationLayer": "入口",
+      "extensionLayer": "管理界面",
+      "failureDomain": "界面",
+      "domain": "UI",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "dataZone": "処理",
+          "opsLayer": "運用",
+          "environment": "ブラウザ",
+          "extensionLayer": "管理画面",
+          "name": "管理 Web UI",
+          "description": "隔離環境の操作・状態可視化",
+          "failureDomain": "画面",
+          "trustZone": "公開",
+          "runtime": "ブラウザ",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "dataZone": "Processing",
+          "opsLayer": "Operations",
+          "environment": "Browser",
+          "extensionLayer": "Admin UI",
+          "name": "Management Web UI",
+          "description": "Operate and visualize isolated environments",
+          "failureDomain": "UI",
+          "integrationLayer": "Entry Point",
+          "trustZone": "Public Zone",
+          "runtime": "Browser",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "gateway",
+      "name": "API 网关",
+      "kind": "gateway",
+      "description": "统一 API 入口与访问控制",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "API",
+      "repo": "backend",
+      "runtime": "Web 服务器",
+      "environment": "控制平面",
+      "trustZone": "边界区",
+      "opsLayer": "运维",
+      "integrationLayer": "公共 API",
+      "extensionLayer": "核心",
+      "failureDomain": "控制平台",
+      "domain": "入口",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "dataZone": "処理",
+          "opsLayer": "運用",
+          "environment": "コントロールプレーン",
+          "extensionLayer": "中核",
+          "name": "API ゲートウェイ",
+          "description": "API の入口とアクセス制御",
+          "failureDomain": "制御基盤",
+          "integrationLayer": "公開 API",
+          "trustZone": "境界",
+          "runtime": "Web サーバー",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "dataZone": "Processing",
+          "opsLayer": "Operations",
+          "domain": "Entry Point",
+          "environment": "Control Plane",
+          "extensionLayer": "Core",
+          "name": "API Gateway",
+          "description": "API entry point and access control",
+          "failureDomain": "Control Platform",
+          "integrationLayer": "Public API",
+          "trustZone": "Boundary",
+          "runtime": "Web Server",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "auth",
+      "name": "认证服务（假设）",
+      "kind": "external",
+      "description": "发行身份令牌的外部系统",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "外部集成",
+      "layer": "外部",
+      "repo": "external",
+      "runtime": "外部服务",
+      "environment": "外部",
+      "trustZone": "外部信任域",
+      "opsLayer": "维护",
+      "integrationLayer": "外部身份",
+      "extensionLayer": "外部",
+      "failureDomain": "认证依赖",
+      "domain": "外部",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "dataZone": "処理",
+          "opsLayer": "保守",
+          "name": "認証基盤（想定）",
+          "description": "認証トークンを発行する外部基盤",
+          "failureDomain": "認証依存",
+          "integrationLayer": "外部 ID",
+          "trustZone": "外部信頼域",
+          "runtime": "外部サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "外部連携"
+        },
+        "en-US": {
+          "layer": "External",
+          "dataZone": "Processing",
+          "opsLayer": "Maintenance",
+          "domain": "External",
+          "environment": "External",
+          "extensionLayer": "External",
+          "name": "Identity Provider (Assumed)",
+          "description": "External identity token provider",
+          "failureDomain": "Identity Dependency",
+          "integrationLayer": "External Identity",
+          "trustZone": "External Trust Zone",
+          "runtime": "External Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "External Integrations"
+        }
+      }
+    },
+    {
+      "id": "orchestrator",
+      "name": "环境编排服务",
+      "kind": "service",
+      "description": "协调隔离环境的创建和停止",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "控制",
+      "repo": "core",
+      "runtime": "控制服务",
+      "environment": "控制平面",
+      "trustZone": "管理区",
+      "opsLayer": "运维",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "核心",
+      "failureDomain": "控制平台",
+      "domain": "控制",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "制御",
+          "dataZone": "処理",
+          "opsLayer": "運用",
+          "domain": "制御",
+          "environment": "コントロールプレーン",
+          "extensionLayer": "中核",
+          "name": "環境オーケストレータ",
+          "description": "隔離環境の作成・停止を調整",
+          "failureDomain": "制御基盤",
+          "trustZone": "管理",
+          "runtime": "制御サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Control",
+          "dataZone": "Processing",
+          "opsLayer": "Operations",
+          "domain": "Control",
+          "environment": "Control Plane",
+          "extensionLayer": "Core",
+          "name": "Environment Orchestrator",
+          "description": "Coordinate sandbox creation and shutdown",
+          "failureDomain": "Control Platform",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Control Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "policy",
+      "name": "执行策略",
+      "kind": "service",
+      "description": "评估授权条件和隔离策略",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "控制",
+      "repo": "core",
+      "runtime": "控制服务",
+      "environment": "控制平面",
+      "trustZone": "管理区",
+      "opsLayer": "审计",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "核心",
+      "failureDomain": "控制平台",
+      "domain": "权限",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "制御",
+          "dataZone": "処理",
+          "opsLayer": "監査",
+          "domain": "権限",
+          "environment": "コントロールプレーン",
+          "extensionLayer": "中核",
+          "name": "実行ポリシー",
+          "description": "許可条件と隔離方針を判定",
+          "failureDomain": "制御基盤",
+          "trustZone": "管理",
+          "runtime": "制御サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Control",
+          "dataZone": "Processing",
+          "opsLayer": "Audit",
+          "domain": "Permissions",
+          "environment": "Control Plane",
+          "extensionLayer": "Core",
+          "name": "Execution Policy",
+          "description": "Evaluate authorization and isolation policies",
+          "failureDomain": "Control Platform",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Control Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "scheduler",
+      "name": "任务调度器",
+      "kind": "service",
+      "description": "选择目标环境及执行计划",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "控制",
+      "repo": "core",
+      "runtime": "控制服务",
+      "environment": "控制平面",
+      "trustZone": "管理区",
+      "opsLayer": "运维",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "核心",
+      "failureDomain": "控制平台",
+      "domain": "执行协调",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "制御",
+          "dataZone": "処理",
+          "opsLayer": "運用",
+          "domain": "実行調整",
+          "environment": "コントロールプレーン",
+          "extensionLayer": "中核",
+          "name": "実行スケジューラ",
+          "description": "対象環境と実行計画を選択",
+          "failureDomain": "制御基盤",
+          "trustZone": "管理",
+          "runtime": "制御サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Control",
+          "dataZone": "Processing",
+          "opsLayer": "Operations",
+          "domain": "Scheduling",
+          "environment": "Control Plane",
+          "extensionLayer": "Core",
+          "name": "Execution Scheduler",
+          "description": "Select execution targets and schedules",
+          "failureDomain": "Control Platform",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Control Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "plugin-registry",
+      "name": "插件注册管理",
+      "kind": "module",
+      "description": "提供运行时扩展接口",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "扩展",
+      "repo": "core",
+      "runtime": "控制服务",
+      "environment": "控制平面",
+      "trustZone": "管理区",
+      "opsLayer": "维护",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "插件管理",
+      "failureDomain": "控制平台",
+      "domain": "扩展",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "拡張",
+          "dataZone": "処理",
+          "opsLayer": "保守",
+          "domain": "拡張",
+          "environment": "コントロールプレーン",
+          "extensionLayer": "プラグイン管理",
+          "name": "プラグイン登録管理",
+          "description": "対応ランタイムの拡張点を公開",
+          "failureDomain": "制御基盤",
+          "trustZone": "管理",
+          "runtime": "制御サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Extensions",
+          "dataZone": "Processing",
+          "opsLayer": "Maintenance",
+          "domain": "Extensions",
+          "environment": "Control Plane",
+          "extensionLayer": "Plugin Management",
+          "name": "Plugin Registry",
+          "description": "Expose runtime extension points",
+          "failureDomain": "Control Platform",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Control Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "windows-adapter",
+      "name": "Windows Sandbox 适配器",
+      "kind": "plugin",
+      "description": "封装 Windows Sandbox 操作",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "适配器",
+      "repo": "plugins",
+      "runtime": "宿主机服务",
+      "environment": "宿主机",
+      "trustZone": "高信任域",
+      "opsLayer": "运维",
+      "integrationLayer": "宿主机接口",
+      "extensionLayer": "适配器",
+      "failureDomain": "Windows 宿主机",
+      "domain": "执行依赖",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "アダプタ",
+          "dataZone": "処理",
+          "opsLayer": "運用",
+          "domain": "実行依存",
+          "environment": "ホスト",
+          "extensionLayer": "アダプタ",
+          "name": "Windows Sandbox アダプタ",
+          "description": "Windows Sandbox の操作を抽象化",
+          "failureDomain": "Windows ホスト",
+          "integrationLayer": "ホスト接続",
+          "trustZone": "高信頼域",
+          "runtime": "ホストサービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Adapters",
+          "dataZone": "Processing",
+          "opsLayer": "Operations",
+          "domain": "Runtime Dependencies",
+          "environment": "Host",
+          "extensionLayer": "Adapters",
+          "name": "Windows Sandbox Adapter",
+          "description": "Abstract Windows Sandbox operations",
+          "failureDomain": "Windows Host",
+          "integrationLayer": "Host Interface",
+          "trustZone": "Privileged Trust Zone",
+          "runtime": "Host Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "multipass-adapter",
+      "name": "Multipass 适配器",
+      "kind": "plugin",
+      "description": "封装 Multipass 操作",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "适配器",
+      "repo": "plugins",
+      "runtime": "宿主机服务",
+      "environment": "宿主机",
+      "trustZone": "高信任域",
+      "opsLayer": "运维",
+      "integrationLayer": "宿主机接口",
+      "extensionLayer": "适配器",
+      "failureDomain": "Windows 宿主机",
+      "domain": "执行依赖",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "アダプタ",
+          "dataZone": "処理",
+          "opsLayer": "運用",
+          "domain": "実行依存",
+          "environment": "ホスト",
+          "extensionLayer": "アダプタ",
+          "name": "Multipass アダプタ",
+          "description": "Multipass の操作を抽象化",
+          "failureDomain": "Windows ホスト",
+          "integrationLayer": "ホスト接続",
+          "trustZone": "高信頼域",
+          "runtime": "ホストサービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Adapters",
+          "dataZone": "Processing",
+          "opsLayer": "Operations",
+          "domain": "Runtime Dependencies",
+          "environment": "Host",
+          "extensionLayer": "Adapters",
+          "name": "Multipass Adapter",
+          "description": "Abstract Multipass operations",
+          "failureDomain": "Windows Host",
+          "integrationLayer": "Host Interface",
+          "trustZone": "Privileged Trust Zone",
+          "runtime": "Host Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "docker-adapter",
+      "name": "Docker 适配器",
+      "kind": "plugin",
+      "description": "封装 Docker 操作",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "适配器",
+      "repo": "plugins",
+      "runtime": "宿主机服务",
+      "environment": "宿主机",
+      "trustZone": "高信任域",
+      "opsLayer": "运维",
+      "integrationLayer": "宿主机接口",
+      "extensionLayer": "适配器",
+      "failureDomain": "Windows 宿主机",
+      "domain": "执行依赖",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "アダプタ",
+          "dataZone": "処理",
+          "opsLayer": "運用",
+          "domain": "実行依存",
+          "environment": "ホスト",
+          "extensionLayer": "アダプタ",
+          "name": "Docker アダプタ",
+          "description": "Docker の操作を抽象化",
+          "failureDomain": "Windows ホスト",
+          "integrationLayer": "ホスト接続",
+          "trustZone": "高信頼域",
+          "runtime": "ホストサービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Adapters",
+          "dataZone": "Processing",
+          "opsLayer": "Operations",
+          "domain": "Runtime Dependencies",
+          "environment": "Host",
+          "extensionLayer": "Adapters",
+          "name": "Docker Adapter",
+          "description": "Abstract Docker operations",
+          "failureDomain": "Windows Host",
+          "integrationLayer": "Host Interface",
+          "trustZone": "Privileged Trust Zone",
+          "runtime": "Host Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "host-daemon",
+      "name": "宿主机守护进程",
+      "kind": "process",
+      "description": "代理具备权限边界的宿主机操作",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "执行",
+      "repo": "host",
+      "runtime": "Windows 宿主机",
+      "environment": "宿主机",
+      "trustZone": "高信任域",
+      "opsLayer": "监控",
+      "integrationLayer": "宿主机接口",
+      "extensionLayer": "核心",
+      "failureDomain": "宿主机",
+      "domain": "执行平台",
+      "dataZone": "生成",
+      "i18n": {
+        "ja-JP": {
+          "layer": "実行",
+          "opsLayer": "監視",
+          "domain": "実行基盤",
+          "environment": "ホスト",
+          "extensionLayer": "中核",
+          "name": "ホスト常駐プロセス",
+          "description": "権限を分離したホスト操作を仲介",
+          "failureDomain": "ホスト",
+          "integrationLayer": "ホスト接続",
+          "trustZone": "高信頼域",
+          "runtime": "Windows ホスト",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Execution",
+          "dataZone": "Generation",
+          "opsLayer": "Monitoring",
+          "domain": "Execution Platform",
+          "environment": "Host",
+          "extensionLayer": "Core",
+          "name": "Host Daemon",
+          "description": "Broker privileged host actions",
+          "failureDomain": "Host",
+          "integrationLayer": "Host Interface",
+          "trustZone": "Privileged Trust Zone",
+          "runtime": "Windows Host",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "windows-sandbox",
+      "name": "Windows Sandbox",
+      "kind": "runtime",
+      "description": "临时 Windows 运行环境",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "隔离环境",
+      "layer": "运行环境",
+      "repo": "runtime",
+      "runtime": "客户机",
+      "environment": "Windows Sandbox",
+      "trustZone": "隔离信任域",
+      "opsLayer": "监控",
+      "integrationLayer": "运行环境",
+      "extensionLayer": "运行时",
+      "failureDomain": "Windows Sandbox",
+      "domain": "隔离环境",
+      "dataZone": "生成",
+      "i18n": {
+        "ja-JP": {
+          "layer": "実行環境",
+          "opsLayer": "監視",
+          "domain": "隔離環境",
+          "extensionLayer": "ランタイム",
+          "description": "一時的な Windows 実行環境",
+          "integrationLayer": "実行環境",
+          "trustZone": "隔離信頼域",
+          "runtime": "ゲスト",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "隔離環境"
+        },
+        "en-US": {
+          "layer": "Runtime Environments",
+          "dataZone": "Generation",
+          "opsLayer": "Monitoring",
+          "domain": "Isolated Environments",
+          "extensionLayer": "Runtimes",
+          "description": "Ephemeral Windows runtime",
+          "integrationLayer": "Runtime Environments",
+          "trustZone": "Isolated Trust Zone",
+          "runtime": "Guest",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "Isolated Environments"
+        }
+      }
+    },
+    {
+      "id": "multipass",
+      "name": "Multipass VM",
+      "kind": "runtime",
+      "description": "Linux 虚拟机运行环境",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "隔离环境",
+      "layer": "运行环境",
+      "repo": "runtime",
+      "runtime": "客户机",
+      "environment": "Multipass",
+      "trustZone": "隔离信任域",
+      "opsLayer": "监控",
+      "integrationLayer": "运行环境",
+      "extensionLayer": "运行时",
+      "failureDomain": "Linux VM",
+      "domain": "隔离环境",
+      "dataZone": "生成",
+      "i18n": {
+        "ja-JP": {
+          "layer": "実行環境",
+          "opsLayer": "監視",
+          "domain": "隔離環境",
+          "extensionLayer": "ランタイム",
+          "description": "Linux 仮想マシン実行環境",
+          "integrationLayer": "実行環境",
+          "trustZone": "隔離信頼域",
+          "runtime": "ゲスト",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "隔離環境"
+        },
+        "en-US": {
+          "layer": "Runtime Environments",
+          "dataZone": "Generation",
+          "opsLayer": "Monitoring",
+          "domain": "Isolated Environments",
+          "extensionLayer": "Runtimes",
+          "description": "Linux virtual machine runtime",
+          "integrationLayer": "Runtime Environments",
+          "trustZone": "Isolated Trust Zone",
+          "runtime": "Guest",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "Isolated Environments"
+        }
+      }
+    },
+    {
+      "id": "docker",
+      "name": "Docker 容器",
+      "kind": "runtime",
+      "description": "容器运行环境",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "隔离环境",
+      "layer": "运行环境",
+      "repo": "runtime",
+      "runtime": "客户机",
+      "environment": "Docker",
+      "trustZone": "隔离信任域",
+      "opsLayer": "监控",
+      "integrationLayer": "运行环境",
+      "extensionLayer": "运行时",
+      "failureDomain": "容器",
+      "domain": "隔离环境",
+      "dataZone": "生成",
+      "i18n": {
+        "ja-JP": {
+          "layer": "実行環境",
+          "opsLayer": "監視",
+          "domain": "隔離環境",
+          "extensionLayer": "ランタイム",
+          "name": "Docker コンテナ",
+          "description": "コンテナ実行環境",
+          "failureDomain": "コンテナ",
+          "integrationLayer": "実行環境",
+          "trustZone": "隔離信頼域",
+          "runtime": "ゲスト",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "隔離環境"
+        },
+        "en-US": {
+          "layer": "Runtime Environments",
+          "dataZone": "Generation",
+          "opsLayer": "Monitoring",
+          "domain": "Isolated Environments",
+          "extensionLayer": "Runtimes",
+          "name": "Docker Container",
+          "description": "Container runtime",
+          "failureDomain": "Containers",
+          "integrationLayer": "Runtime Environments",
+          "trustZone": "Isolated Trust Zone",
+          "runtime": "Guest",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "Isolated Environments"
+        }
+      }
+    },
+    {
+      "id": "agent",
+      "name": "Agent 执行进程",
+      "kind": "process",
+      "description": "在隔离环境内执行任务",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "隔离环境",
+      "layer": "Agent",
+      "repo": "agents",
+      "runtime": "客户机",
+      "environment": "隔离环境",
+      "trustZone": "隔离信任域",
+      "opsLayer": "监控",
+      "integrationLayer": "运行环境",
+      "extensionLayer": "扩展",
+      "failureDomain": "客户机",
+      "domain": "Agent 执行",
+      "dataZone": "生成",
+      "i18n": {
+        "ja-JP": {
+          "opsLayer": "監視",
+          "domain": "Agent 実行",
+          "environment": "隔離環境",
+          "extensionLayer": "拡張",
+          "name": "Agent 実行体",
+          "description": "隔離環境内で作業を実行",
+          "failureDomain": "ゲスト",
+          "integrationLayer": "実行環境",
+          "trustZone": "隔離信頼域",
+          "runtime": "ゲスト",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "隔離環境"
+        },
+        "en-US": {
+          "dataZone": "Generation",
+          "opsLayer": "Monitoring",
+          "domain": "Agent Execution",
+          "environment": "Isolated Environments",
+          "extensionLayer": "Extensions",
+          "name": "Agent Worker",
+          "description": "Execute tasks inside isolated runtimes",
+          "failureDomain": "Guest",
+          "integrationLayer": "Runtime Environments",
+          "trustZone": "Isolated Trust Zone",
+          "runtime": "Guest",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "Isolated Environments"
+        }
+      }
+    },
+    {
+      "id": "metadata",
+      "name": "配置元数据",
+      "kind": "database",
+      "description": "管理环境配置与操作状态",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "数据",
+      "repo": "data",
+      "runtime": "DB",
+      "environment": "控制平面",
+      "trustZone": "管理区",
+      "opsLayer": "维护",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "数据",
+      "failureDomain": "DB",
+      "domain": "控制平台",
+      "dataZone": "保存",
+      "i18n": {
+        "ja-JP": {
+          "layer": "データ",
+          "dataZone": "保管",
+          "opsLayer": "保守",
+          "domain": "制御基盤",
+          "environment": "コントロールプレーン",
+          "extensionLayer": "データ",
+          "name": "構成メタデータ",
+          "description": "環境構成と操作状態の管理",
+          "trustZone": "管理",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Data",
+          "dataZone": "Storage",
+          "opsLayer": "Maintenance",
+          "domain": "Control Platform",
+          "environment": "Control Plane",
+          "extensionLayer": "Data",
+          "name": "Configuration Metadata",
+          "description": "Manage environment configuration and state",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "artifact",
+      "name": "制品存储",
+      "kind": "storage",
+      "description": "保存制品及执行日志",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "数据",
+      "repo": "data",
+      "runtime": "存储位置",
+      "environment": "存储",
+      "trustZone": "管理区",
+      "opsLayer": "维护",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "数据",
+      "failureDomain": "存储",
+      "domain": "数据",
+      "dataZone": "保存",
+      "i18n": {
+        "ja-JP": {
+          "layer": "データ",
+          "dataZone": "保管",
+          "opsLayer": "保守",
+          "domain": "データ",
+          "environment": "ストレージ",
+          "extensionLayer": "データ",
+          "name": "成果物保管",
+          "description": "成果物および実行ログを保管",
+          "failureDomain": "ストレージ",
+          "trustZone": "管理",
+          "runtime": "保管先",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Data",
+          "dataZone": "Storage",
+          "opsLayer": "Maintenance",
+          "domain": "Data",
+          "environment": "Storage",
+          "extensionLayer": "Data",
+          "name": "Artifact Storage",
+          "description": "Store artifacts and execution logs",
+          "failureDomain": "Storage",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Storage Destination",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "collector",
+      "name": "监控采集",
+      "kind": "operations",
+      "description": "采集运行状态、日志与告警",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "监控",
+      "repo": "ops",
+      "runtime": "监控服务",
+      "environment": "运维平台",
+      "trustZone": "管理区",
+      "opsLayer": "监控",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "监控",
+      "failureDomain": "运维",
+      "domain": "监控",
+      "dataZone": "采集",
+      "i18n": {
+        "ja-JP": {
+          "layer": "監視",
+          "dataZone": "収集",
+          "opsLayer": "監視",
+          "domain": "監視",
+          "environment": "運用基盤",
+          "extensionLayer": "監視",
+          "name": "監視収集",
+          "description": "稼働状況・ログ・警告を収集",
+          "failureDomain": "運用",
+          "trustZone": "管理",
+          "runtime": "監視サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Monitoring",
+          "dataZone": "Collection",
+          "opsLayer": "Monitoring",
+          "domain": "Monitoring",
+          "environment": "Operations Platform",
+          "extensionLayer": "Monitoring",
+          "name": "Telemetry Collector",
+          "description": "Collect telemetry, logs and warnings",
+          "failureDomain": "Operations",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Monitoring Service",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "alert",
+      "name": "通知服务",
+      "kind": "operations",
+      "description": "通知故障与阈值超限",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "监控",
+      "repo": "ops",
+      "runtime": "监控服务",
+      "environment": "运维平台",
+      "trustZone": "管理区",
+      "opsLayer": "监控",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "监控",
+      "failureDomain": "运维",
+      "domain": "通知",
+      "dataZone": "采集",
+      "i18n": {
+        "ja-JP": {
+          "layer": "監視",
+          "dataZone": "収集",
+          "opsLayer": "監視",
+          "environment": "運用基盤",
+          "extensionLayer": "監視",
+          "name": "通知サービス",
+          "description": "障害・閾値超過を通知",
+          "failureDomain": "運用",
+          "trustZone": "管理",
+          "runtime": "監視サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Monitoring",
+          "dataZone": "Collection",
+          "opsLayer": "Monitoring",
+          "domain": "Notifications",
+          "environment": "Operations Platform",
+          "extensionLayer": "Monitoring",
+          "name": "Alerting Service",
+          "description": "Notify failures and threshold breaches",
+          "failureDomain": "Operations",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Monitoring Service",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    },
+    {
+      "id": "reconciler",
+      "name": "状态对账与恢复",
+      "kind": "service",
+      "description": "比对声明状态与实际状态",
+      "verification": "illustrative",
+      "evidence": "虚构操作示例（非真实系统规格）",
+      "boundary": "系统内部",
+      "layer": "控制",
+      "repo": "core",
+      "runtime": "控制服务",
+      "environment": "控制平面",
+      "trustZone": "管理区",
+      "opsLayer": "恢复",
+      "integrationLayer": "内部 API",
+      "extensionLayer": "核心",
+      "failureDomain": "控制平台",
+      "domain": "恢复",
+      "dataZone": "处理",
+      "i18n": {
+        "ja-JP": {
+          "layer": "制御",
+          "dataZone": "処理",
+          "opsLayer": "復旧",
+          "domain": "復旧",
+          "environment": "コントロールプレーン",
+          "extensionLayer": "中核",
+          "name": "状態整合・復旧",
+          "description": "宣言状態と実行状態を照合",
+          "failureDomain": "制御基盤",
+          "trustZone": "管理",
+          "runtime": "制御サービス",
+          "evidence": "架空の操作例（実システムの仕様ではない）",
+          "boundary": "システム内"
+        },
+        "en-US": {
+          "layer": "Control",
+          "dataZone": "Processing",
+          "opsLayer": "Recovery",
+          "domain": "Recovery",
+          "environment": "Control Plane",
+          "extensionLayer": "Core",
+          "name": "State Reconciler",
+          "description": "Reconcile desired and observed state",
+          "failureDomain": "Control Platform",
+          "integrationLayer": "Internal API",
+          "trustZone": "Management Zone",
+          "runtime": "Control Services",
+          "evidence": "Illustrative operation only (not a real specification)",
+          "boundary": "System Interior"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e01",
+      "source": "operator",
+      "target": "web",
+      "kind": "uses",
+      "description": "operator → web (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "operator → web（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "operator → web (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e02",
+      "source": "developer",
+      "target": "web",
+      "kind": "uses",
+      "description": "developer → web (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "developer → web（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "developer → web (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e03",
+      "source": "web",
+      "target": "gateway",
+      "kind": "calls",
+      "description": "web → gateway (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "web → gateway（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "web → gateway (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e04",
+      "source": "gateway",
+      "target": "auth",
+      "kind": "authenticates",
+      "description": "gateway → auth (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "gateway → auth（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "gateway → auth (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e05",
+      "source": "gateway",
+      "target": "orchestrator",
+      "kind": "calls",
+      "description": "gateway → orchestrator (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "gateway → orchestrator（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "gateway → orchestrator (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e06",
+      "source": "orchestrator",
+      "target": "policy",
+      "kind": "calls",
+      "description": "orchestrator → policy (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "orchestrator → policy（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "orchestrator → policy (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e07",
+      "source": "orchestrator",
+      "target": "scheduler",
+      "kind": "calls",
+      "description": "orchestrator → scheduler (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "orchestrator → scheduler（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "orchestrator → scheduler (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e08",
+      "source": "orchestrator",
+      "target": "metadata",
+      "kind": "reads",
+      "description": "orchestrator → metadata (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "orchestrator → metadata（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "orchestrator → metadata (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e09",
+      "source": "orchestrator",
+      "target": "metadata",
+      "kind": "writes",
+      "description": "orchestrator → metadata (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "orchestrator → metadata（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "orchestrator → metadata (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e10",
+      "source": "orchestrator",
+      "target": "plugin-registry",
+      "kind": "uses",
+      "description": "orchestrator → plugin-registry (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "orchestrator → plugin-registry（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "orchestrator → plugin-registry (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e11",
+      "source": "scheduler",
+      "target": "host-daemon",
+      "kind": "calls",
+      "description": "scheduler → host-daemon (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "scheduler → host-daemon（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "scheduler → host-daemon (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e12",
+      "source": "host-daemon",
+      "target": "windows-adapter",
+      "kind": "uses",
+      "description": "host-daemon → windows-adapter (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "host-daemon → windows-adapter（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "host-daemon → windows-adapter (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e13",
+      "source": "host-daemon",
+      "target": "multipass-adapter",
+      "kind": "uses",
+      "description": "host-daemon → multipass-adapter (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "host-daemon → multipass-adapter（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "host-daemon → multipass-adapter (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e14",
+      "source": "host-daemon",
+      "target": "docker-adapter",
+      "kind": "uses",
+      "description": "host-daemon → docker-adapter (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "host-daemon → docker-adapter（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "host-daemon → docker-adapter (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e15",
+      "source": "windows-adapter",
+      "target": "windows-sandbox",
+      "kind": "controls",
+      "description": "windows-adapter → windows-sandbox (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "windows-adapter → windows-sandbox（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "windows-adapter → windows-sandbox (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e16",
+      "source": "multipass-adapter",
+      "target": "multipass",
+      "kind": "controls",
+      "description": "multipass-adapter → multipass (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "multipass-adapter → multipass（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "multipass-adapter → multipass (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e17",
+      "source": "docker-adapter",
+      "target": "docker",
+      "kind": "controls",
+      "description": "docker-adapter → docker (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "docker-adapter → docker（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "docker-adapter → docker (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e18",
+      "source": "windows-sandbox",
+      "target": "agent",
+      "kind": "hosts",
+      "description": "windows-sandbox → agent (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "windows-sandbox → agent（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "windows-sandbox → agent (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e19",
+      "source": "multipass",
+      "target": "agent",
+      "kind": "hosts",
+      "description": "multipass → agent (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "multipass → agent（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "multipass → agent (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e20",
+      "source": "docker",
+      "target": "agent",
+      "kind": "hosts",
+      "description": "docker → agent (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "docker → agent（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "docker → agent (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e21",
+      "source": "agent",
+      "target": "artifact",
+      "kind": "writes",
+      "description": "agent → artifact (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "agent → artifact（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "agent → artifact (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e22",
+      "source": "agent",
+      "target": "collector",
+      "kind": "publishes",
+      "description": "agent → collector (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "agent → collector（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "agent → collector (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e23",
+      "source": "host-daemon",
+      "target": "collector",
+      "kind": "publishes",
+      "description": "host-daemon → collector (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "host-daemon → collector（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "host-daemon → collector (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e24",
+      "source": "collector",
+      "target": "alert",
+      "kind": "publishes",
+      "description": "collector → alert (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "collector → alert（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "collector → alert (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e25",
+      "source": "collector",
+      "target": "artifact",
+      "kind": "writes",
+      "description": "collector → artifact (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "collector → artifact（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "collector → artifact (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e26",
+      "source": "collector",
+      "target": "reconciler",
+      "kind": "publishes",
+      "description": "collector → reconciler (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "collector → reconciler（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "collector → reconciler (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e27",
+      "source": "reconciler",
+      "target": "orchestrator",
+      "kind": "calls",
+      "description": "reconciler → orchestrator (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "reconciler → orchestrator（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "reconciler → orchestrator (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e28",
+      "source": "reconciler",
+      "target": "host-daemon",
+      "kind": "calls",
+      "description": "reconciler → host-daemon (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "reconciler → host-daemon（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "reconciler → host-daemon (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e29",
+      "source": "policy",
+      "target": "host-daemon",
+      "kind": "controls",
+      "description": "policy → host-daemon (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "policy → host-daemon（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "policy → host-daemon (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e30",
+      "source": "plugin-registry",
+      "target": "windows-adapter",
+      "kind": "extends",
+      "description": "plugin-registry → windows-adapter (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "plugin-registry → windows-adapter（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "plugin-registry → windows-adapter (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e31",
+      "source": "plugin-registry",
+      "target": "multipass-adapter",
+      "kind": "extends",
+      "description": "plugin-registry → multipass-adapter (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "plugin-registry → multipass-adapter（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "plugin-registry → multipass-adapter (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e32",
+      "source": "plugin-registry",
+      "target": "docker-adapter",
+      "kind": "extends",
+      "description": "plugin-registry → docker-adapter (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "plugin-registry → docker-adapter（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "plugin-registry → docker-adapter (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e33",
+      "source": "gateway",
+      "target": "collector",
+      "kind": "publishes",
+      "description": "gateway → collector (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "gateway → collector（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "gateway → collector (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    },
+    {
+      "id": "e34",
+      "source": "metadata",
+      "target": "reconciler",
+      "kind": "exchanges",
+      "description": "metadata → reconciler (虚构关系)",
+      "verification": "illustrative",
+      "control": "待确认（虚构构成示例）",
+      "i18n": {
+        "ja-JP": {
+          "description": "metadata → reconciler（架空の関係）",
+          "control": "要確認（架空の構成例）"
+        },
+        "en-US": {
+          "description": "metadata → reconciler (illustrative link)",
+          "control": "To verify (illustrative architecture)"
+        }
+      }
+    }
+  ],
+  "views": [
+    {
+      "id": "context",
+      "title": "系统上下文",
+      "description": "系统边界与外部参与方",
+      "stakeholders": [
+        "业务部门",
+        "产品规划"
+      ],
+      "concerns": [
+        "边界区",
+        "外部依赖"
+      ],
+      "questions": [
+        "谁使用该系统？"
+      ],
+      "groupBy": "boundary",
+      "orderBy": [
+        "用户",
+        "系统内部",
+        "外部集成",
+        "隔离环境"
+      ],
+      "nodeIds": [
+        "operator",
+        "developer",
+        "web",
+        "gateway",
+        "auth",
+        "orchestrator",
+        "windows-sandbox",
+        "multipass",
+        "docker"
+      ],
+      "edgeKinds": [
+        "uses",
+        "calls",
+        "authenticates",
+        "controls"
+      ],
+      "status": "ready",
+      "layout": "zones",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "境界",
+            "外部依存"
+          ],
+          "questions": [
+            "誰がシステムを利用するか"
+          ],
+          "orderBy": [
+            "利用者",
+            "システム内",
+            "外部連携",
+            "隔離環境"
+          ],
+          "description": "システム境界と外部主体",
+          "title": "システムコンテキスト",
+          "stakeholders": [
+            "利用部門",
+            "企画"
+          ],
+          "reviewIntent": "システム境界を越える依存関係はどこにあるか"
+        },
+        "en-US": {
+          "concerns": [
+            "Boundary",
+            "External Dependencies"
+          ],
+          "questions": [
+            "Who uses the system?"
+          ],
+          "orderBy": [
+            "Users",
+            "System Interior",
+            "External Integrations",
+            "Isolated Environments"
+          ],
+          "description": "System boundaries and external actors",
+          "title": "System Context",
+          "stakeholders": [
+            "Business Stakeholders",
+            "Planning"
+          ],
+          "reviewIntent": "Which dependencies cross the system boundary?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "boundary"
+        },
+        "y": {
+          "field": "runtime"
+        },
+        "z": {
+          "field": "environment"
+        }
+      },
+      "reviewIntent": "谁处于系统边界内外，跨区依赖有哪些？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "usecase",
+      "title": "用例",
+      "description": "用户操作及系统控制",
+      "stakeholders": [
+        "用户",
+        "QA"
+      ],
+      "concerns": [
+        "操作主体",
+        "实现功能"
+      ],
+      "questions": [
+        "谁执行哪些操作？"
+      ],
+      "groupBy": "domain",
+      "orderBy": [
+        "操作主体",
+        "UI",
+        "入口",
+        "控制",
+        "执行协调",
+        "恢复"
+      ],
+      "nodeIds": [
+        "operator",
+        "developer",
+        "web",
+        "gateway",
+        "orchestrator",
+        "scheduler",
+        "reconciler"
+      ],
+      "edgeKinds": [
+        "uses",
+        "calls"
+      ],
+      "status": "ready",
+      "layout": "lanes",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "操作主体",
+            "実現機能"
+          ],
+          "questions": [
+            "誰が何を操作するか"
+          ],
+          "orderBy": [
+            "操作主体",
+            "UI",
+            "入口",
+            "制御",
+            "実行調整",
+            "復旧"
+          ],
+          "description": "利用者が要求する操作と制御",
+          "title": "ユースケース",
+          "stakeholders": [
+            "利用者",
+            "QA"
+          ],
+          "reviewIntent": "利用者の操作は業務領域と実行環境をどう横断するか"
+        },
+        "en-US": {
+          "concerns": [
+            "Actors",
+            "Supported Features"
+          ],
+          "questions": [
+            "Who performs which actions?"
+          ],
+          "orderBy": [
+            "Actors",
+            "UI",
+            "Entry Point",
+            "Control",
+            "Scheduling",
+            "Recovery"
+          ],
+          "description": "User interactions and system controls",
+          "title": "Use Cases",
+          "stakeholders": [
+            "Users",
+            "QA"
+          ],
+          "reviewIntent": "How do user actions span business domains and runtimes?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "boundary"
+        },
+        "y": {
+          "field": "runtime"
+        },
+        "z": {
+          "field": "domain"
+        }
+      },
+      "reviewIntent": "操作主体如何跨越业务与运行环境？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "logical",
+      "title": "逻辑架构",
+      "description": "职责划分与逻辑依赖",
+      "stakeholders": [
+        "架构师",
+        "开发"
+      ],
+      "concerns": [
+        "职责",
+        "依赖方向"
+      ],
+      "questions": [
+        "职责是否合理划分？"
+      ],
+      "groupBy": "layer",
+      "orderBy": [
+        "UI",
+        "API",
+        "控制",
+        "扩展",
+        "执行",
+        "数据",
+        "监控"
+      ],
+      "nodeIds": [
+        "web",
+        "gateway",
+        "orchestrator",
+        "policy",
+        "scheduler",
+        "plugin-registry",
+        "host-daemon",
+        "metadata",
+        "collector"
+      ],
+      "edgeKinds": [
+        "calls",
+        "uses",
+        "reads",
+        "writes",
+        "controls"
+      ],
+      "status": "ready",
+      "layout": "layers",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "責務",
+            "依存方向"
+          ],
+          "questions": [
+            "責務は分離されているか"
+          ],
+          "orderBy": [
+            "UI",
+            "API",
+            "制御",
+            "拡張",
+            "実行",
+            "データ",
+            "監視"
+          ],
+          "description": "責務分離と論理依存",
+          "title": "論理構成",
+          "stakeholders": [
+            "アーキテクト",
+            "開発"
+          ],
+          "reviewIntent": "どの論理層が信頼ゾーンまたは実行環境を跨ぐか"
+        },
+        "en-US": {
+          "concerns": [
+            "Responsibilities",
+            "Dependency Direction"
+          ],
+          "questions": [
+            "Are responsibilities properly separated?"
+          ],
+          "orderBy": [
+            "UI",
+            "API",
+            "Control",
+            "Extensions",
+            "Execution",
+            "Data",
+            "Monitoring"
+          ],
+          "description": "Responsibility boundaries and dependencies",
+          "title": "Logical Architecture",
+          "stakeholders": [
+            "Architect",
+            "Development"
+          ],
+          "reviewIntent": "Which logical layers cross trust zones or runtimes?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "trustZone"
+        },
+        "y": {
+          "field": "runtime"
+        },
+        "z": {
+          "field": "layer"
+        }
+      },
+      "reviewIntent": "哪一层职责跨越信任域或运行环境？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "development",
+      "title": "开发架构",
+      "description": "代码组织与扩展模块",
+      "stakeholders": [
+        "开发",
+        "评审人员"
+      ],
+      "concerns": [
+        "维护单元",
+        "依赖"
+      ],
+      "questions": [
+        "在哪里修改和测试？"
+      ],
+      "groupBy": "repo",
+      "orderBy": [
+        "console",
+        "backend",
+        "core",
+        "plugins",
+        "agents",
+        "data"
+      ],
+      "nodeIds": [
+        "web",
+        "gateway",
+        "orchestrator",
+        "policy",
+        "scheduler",
+        "plugin-registry",
+        "windows-adapter",
+        "multipass-adapter",
+        "docker-adapter",
+        "agent",
+        "metadata"
+      ],
+      "edgeKinds": [
+        "uses",
+        "extends",
+        "calls"
+      ],
+      "status": "ready",
+      "layout": "lanes",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "保守単位",
+            "依存"
+          ],
+          "questions": [
+            "どこで変更・テストするか"
+          ],
+          "description": "ソースコードと拡張モジュール",
+          "title": "開発構成",
+          "stakeholders": [
+            "開発",
+            "レビュー担当"
+          ],
+          "reviewIntent": "コードの所在と論理層・実行環境の境界に矛盾はないか"
+        },
+        "en-US": {
+          "concerns": [
+            "Maintenance Units",
+            "Dependencies"
+          ],
+          "questions": [
+            "Where are changes made and tested?"
+          ],
+          "description": "Source code and extension modules",
+          "title": "Development Architecture",
+          "stakeholders": [
+            "Development",
+            "Reviewer"
+          ],
+          "reviewIntent": "Are repository ownership, logical layers and runtime boundaries aligned?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "repo"
+        },
+        "y": {
+          "field": "layer"
+        },
+        "z": {
+          "field": "domain"
+        }
+      },
+      "reviewIntent": "代码归属、逻辑分层、运行时边界是否一致？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "process",
+      "title": "进程与运行时",
+      "description": "进程通信与运行单元",
+      "stakeholders": [
+        "实施人员",
+        "运维"
+      ],
+      "concerns": [
+        "进程",
+        "通信"
+      ],
+      "questions": [
+        "进程间如何通信？"
+      ],
+      "groupBy": "runtime",
+      "orderBy": [
+        "浏览器",
+        "Web 服务器",
+        "控制服务",
+        "Windows 宿主机",
+        "客户机",
+        "监控服务"
+      ],
+      "nodeIds": [
+        "web",
+        "gateway",
+        "orchestrator",
+        "scheduler",
+        "host-daemon",
+        "windows-sandbox",
+        "multipass",
+        "docker",
+        "agent",
+        "collector"
+      ],
+      "edgeKinds": [
+        "calls",
+        "controls",
+        "hosts",
+        "publishes"
+      ],
+      "status": "ready",
+      "layout": "lanes",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "プロセス",
+            "通信"
+          ],
+          "questions": [
+            "どの実行単位で通信するか"
+          ],
+          "orderBy": [
+            "ブラウザ",
+            "Web サーバー",
+            "制御サービス",
+            "Windows ホスト",
+            "ゲスト",
+            "監視サービス"
+          ],
+          "description": "実行時の通信と起動単位",
+          "title": "実行・プロセス",
+          "stakeholders": [
+            "実装",
+            "運用"
+          ],
+          "reviewIntent": "プロセスは信頼ゾーンと障害ドメインにどう分布するか"
+        },
+        "en-US": {
+          "concerns": [
+            "Processes",
+            "Communication"
+          ],
+          "questions": [
+            "How do runtime units communicate?"
+          ],
+          "orderBy": [
+            "Browser",
+            "Web Server",
+            "Control Services",
+            "Windows Host",
+            "Guest",
+            "Monitoring Service"
+          ],
+          "description": "Runtime communication and process units",
+          "title": "Runtime Processes",
+          "stakeholders": [
+            "Implementation Team",
+            "Operations"
+          ],
+          "reviewIntent": "How are processes distributed across trust and failure domains?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "trustZone"
+        },
+        "y": {
+          "field": "runtime"
+        },
+        "z": {
+          "field": "failureDomain"
+        }
+      },
+      "reviewIntent": "进程分布是否跨越信任域、故障域？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "deployment",
+      "title": "部署与基础设施",
+      "description": "运行环境及宿主机映射",
+      "stakeholders": [
+        "基础设施",
+        "运维"
+      ],
+      "concerns": [
+        "宿主机",
+        "部署位置"
+      ],
+      "questions": [
+        "组件部署在哪里？"
+      ],
+      "groupBy": "environment",
+      "orderBy": [
+        "浏览器",
+        "控制平面",
+        "宿主机",
+        "Windows Sandbox",
+        "Multipass",
+        "Docker",
+        "隔离环境",
+        "存储",
+        "运维平台"
+      ],
+      "nodeIds": [
+        "web",
+        "gateway",
+        "orchestrator",
+        "metadata",
+        "artifact",
+        "host-daemon",
+        "windows-sandbox",
+        "multipass",
+        "docker",
+        "agent",
+        "collector"
+      ],
+      "edgeKinds": [
+        "calls",
+        "controls",
+        "hosts",
+        "writes",
+        "publishes"
+      ],
+      "status": "ready",
+      "layout": "zones",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "ホスト",
+            "実行場所"
+          ],
+          "questions": [
+            "どこに配置するか"
+          ],
+          "orderBy": [
+            "ブラウザ",
+            "コントロールプレーン",
+            "ホスト",
+            "Windows Sandbox",
+            "Multipass",
+            "Docker",
+            "隔離環境",
+            "ストレージ",
+            "運用基盤"
+          ],
+          "description": "実行環境とホストの対応",
+          "title": "配置・インフラ",
+          "stakeholders": [
+            "インフラ",
+            "運用"
+          ],
+          "reviewIntent": "配置環境・実行環境・信頼ゾーンはどう対応するか"
+        },
+        "en-US": {
+          "concerns": [
+            "Host",
+            "Deployment Location"
+          ],
+          "questions": [
+            "Where are components deployed?"
+          ],
+          "orderBy": [
+            "Browser",
+            "Control Plane",
+            "Host",
+            "Windows Sandbox",
+            "Multipass",
+            "Docker",
+            "Isolated Environments",
+            "Storage",
+            "Operations Platform"
+          ],
+          "description": "Runtime placement and host mapping",
+          "title": "Deployment & Infrastructure",
+          "stakeholders": [
+            "Infrastructure",
+            "Operations"
+          ],
+          "reviewIntent": "How do deployment locations, runtimes and trust zones align?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "environment"
+        },
+        "y": {
+          "field": "trustZone"
+        },
+        "z": {
+          "field": "runtime"
+        }
+      },
+      "reviewIntent": "部署环境、运行时与信任域如何对应？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "data",
+      "title": "数据",
+      "description": "数据产生、流转与存储",
+      "stakeholders": [
+        "DBA",
+        "开发"
+      ],
+      "concerns": [
+        "数据流",
+        "存储位置"
+      ],
+      "questions": [
+        "数据流向哪里？"
+      ],
+      "groupBy": "dataZone",
+      "orderBy": [
+        "处理",
+        "生成",
+        "保存",
+        "采集"
+      ],
+      "nodeIds": [
+        "web",
+        "gateway",
+        "orchestrator",
+        "metadata",
+        "agent",
+        "artifact",
+        "collector",
+        "reconciler"
+      ],
+      "edgeKinds": [
+        "reads",
+        "writes",
+        "publishes",
+        "exchanges",
+        "calls"
+      ],
+      "status": "ready",
+      "layout": "layers",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "データフロー",
+            "保管先"
+          ],
+          "questions": [
+            "データはどこへ流れるか"
+          ],
+          "orderBy": [
+            "処理",
+            "生成",
+            "保管",
+            "収集"
+          ],
+          "description": "データの発生・移動・保管",
+          "title": "データ",
+          "stakeholders": [
+            "DBA",
+            "開発"
+          ],
+          "reviewIntent": "データの段階・信頼ゾーン・配置環境はどう結び付くか"
+        },
+        "en-US": {
+          "concerns": [
+            "Data Flow",
+            "Storage Destination"
+          ],
+          "questions": [
+            "Where does data flow?"
+          ],
+          "orderBy": [
+            "Processing",
+            "Generation",
+            "Storage",
+            "Collection"
+          ],
+          "description": "Data creation, flow and storage",
+          "title": "Data",
+          "stakeholders": [
+            "DBA",
+            "Development"
+          ],
+          "reviewIntent": "How do data stages relate to trust zones and deployment environments?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "dataZone"
+        },
+        "y": {
+          "field": "trustZone"
+        },
+        "z": {
+          "field": "environment"
+        }
+      },
+      "reviewIntent": "数据在哪个阶段、信任域与部署环境间流转？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "security",
+      "title": "安全架构",
+      "description": "信任边界与权限隔离",
+      "stakeholders": [
+        "安全架构",
+        "审计"
+      ],
+      "concerns": [
+        "认证",
+        "信任边界"
+      ],
+      "questions": [
+        "在哪里执行授权与控制？"
+      ],
+      "groupBy": "trustZone",
+      "orderBy": [
+        "公开区",
+        "边界区",
+        "外部信任域",
+        "管理区",
+        "高信任域",
+        "隔离信任域"
+      ],
+      "nodeIds": [
+        "operator",
+        "web",
+        "gateway",
+        "auth",
+        "policy",
+        "orchestrator",
+        "host-daemon",
+        "agent",
+        "windows-sandbox",
+        "multipass",
+        "docker"
+      ],
+      "edgeKinds": [
+        "authenticates",
+        "controls",
+        "uses",
+        "calls",
+        "hosts"
+      ],
+      "status": "ready",
+      "layout": "zones",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "認証",
+            "信頼境界"
+          ],
+          "questions": [
+            "どこで認可・制御するか"
+          ],
+          "orderBy": [
+            "公開",
+            "境界",
+            "外部信頼域",
+            "管理",
+            "高信頼域",
+            "隔離信頼域"
+          ],
+          "description": "信頼境界と権限分離",
+          "title": "セキュリティ",
+          "stakeholders": [
+            "セキュリティ",
+            "監査"
+          ],
+          "reviewIntent": "信頼境界を越える実際の関係と必要な制御は何か"
+        },
+        "en-US": {
+          "concerns": [
+            "Authentication",
+            "Trust Boundary"
+          ],
+          "questions": [
+            "Where is authorization enforced?"
+          ],
+          "orderBy": [
+            "Public Zone",
+            "Boundary",
+            "External Trust Zone",
+            "Management Zone",
+            "Privileged Trust Zone",
+            "Isolated Trust Zone"
+          ],
+          "description": "Trust boundaries and privilege separation",
+          "title": "Security Architecture",
+          "stakeholders": [
+            "Security",
+            "Audit"
+          ],
+          "reviewIntent": "Which evidenced relations cross trust boundaries, and what controls need review?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "trustZone"
+        },
+        "y": {
+          "field": "layer"
+        },
+        "z": {
+          "field": "environment"
+        }
+      },
+      "reviewIntent": "有哪些真实跨信任域的连接，边界控制是否充分？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "operations",
+      "title": "运维与监控",
+      "description": "监控、告警及运维对象",
+      "stakeholders": [
+        "运维",
+        "SRE"
+      ],
+      "concerns": [
+        "运行监控",
+        "故障检测"
+      ],
+      "questions": [
+        "如何检测异常？"
+      ],
+      "groupBy": "opsLayer",
+      "orderBy": [
+        "运维",
+        "监控",
+        "维护",
+        "恢复"
+      ],
+      "nodeIds": [
+        "operator",
+        "web",
+        "host-daemon",
+        "agent",
+        "collector",
+        "alert",
+        "reconciler",
+        "artifact",
+        "orchestrator"
+      ],
+      "edgeKinds": [
+        "publishes",
+        "writes",
+        "calls",
+        "exchanges"
+      ],
+      "status": "ready",
+      "layout": "lanes",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "稼働監視",
+            "障害検知"
+          ],
+          "questions": [
+            "どの情報で異常を知るか"
+          ],
+          "orderBy": [
+            "運用",
+            "監視",
+            "保守",
+            "復旧"
+          ],
+          "description": "監視・アラートと運用対象",
+          "title": "運用・監視",
+          "stakeholders": [
+            "運用",
+            "SRE"
+          ],
+          "reviewIntent": "運用責務は配置環境と障害ドメインをどう横断するか"
+        },
+        "en-US": {
+          "concerns": [
+            "Operational Monitoring",
+            "Failure Detection"
+          ],
+          "questions": [
+            "How are anomalies detected?"
+          ],
+          "orderBy": [
+            "Operations",
+            "Monitoring",
+            "Maintenance",
+            "Recovery"
+          ],
+          "description": "Monitoring, alerts and managed targets",
+          "title": "Operations & Monitoring",
+          "stakeholders": [
+            "Operations",
+            "SRE"
+          ],
+          "reviewIntent": "Which operational responsibilities cross deployments and failure domains?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "opsLayer"
+        },
+        "y": {
+          "field": "environment"
+        },
+        "z": {
+          "field": "domain"
+        }
+      },
+      "reviewIntent": "哪些运维职责跨部署环境或故障域？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "integration",
+      "title": "外部集成",
+      "description": "API 与运行时的连接",
+      "stakeholders": [
+        "集成人员",
+        "开发"
+      ],
+      "concerns": [
+        "接口",
+        "契约"
+      ],
+      "questions": [
+        "跨哪些边界集成？"
+      ],
+      "groupBy": "integrationLayer",
+      "orderBy": [
+        "入口",
+        "公共 API",
+        "外部身份",
+        "内部 API",
+        "宿主机接口",
+        "运行环境"
+      ],
+      "nodeIds": [
+        "web",
+        "gateway",
+        "auth",
+        "orchestrator",
+        "host-daemon",
+        "windows-adapter",
+        "multipass-adapter",
+        "docker-adapter",
+        "windows-sandbox",
+        "multipass",
+        "docker"
+      ],
+      "edgeKinds": [
+        "calls",
+        "authenticates",
+        "uses",
+        "controls"
+      ],
+      "status": "ready",
+      "layout": "layers",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "インターフェース",
+            "契約"
+          ],
+          "questions": [
+            "どの境界で連携するか"
+          ],
+          "orderBy": [
+            "入口",
+            "公開 API",
+            "外部 ID",
+            "内部 API",
+            "ホスト接続",
+            "実行環境"
+          ],
+          "description": "API とランタイムとの接続",
+          "title": "外部連携",
+          "stakeholders": [
+            "連携担当",
+            "開発"
+          ],
+          "reviewIntent": "外部連携点はどの信頼ゾーンと実行環境に属するか"
+        },
+        "en-US": {
+          "concerns": [
+            "Interfaces",
+            "Contracts"
+          ],
+          "questions": [
+            "Which boundaries are crossed by integration?"
+          ],
+          "orderBy": [
+            "Entry Point",
+            "Public API",
+            "External Identity",
+            "Internal API",
+            "Host Interface",
+            "Runtime Environments"
+          ],
+          "description": "API and runtime integration",
+          "title": "External Integrations",
+          "stakeholders": [
+            "Integration Team",
+            "Development"
+          ],
+          "reviewIntent": "Which trust zones and runtimes contain the integration endpoints?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "integrationLayer"
+        },
+        "y": {
+          "field": "environment"
+        },
+        "z": {
+          "field": "runtime"
+        }
+      },
+      "reviewIntent": "对接端点跨越哪些信任域或运行时？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "extension",
+      "title": "扩展与插件",
+      "description": "扩展点与适配器职责",
+      "stakeholders": [
+        "SDK 开发人员",
+        "架构师"
+      ],
+      "concerns": [
+        "插件契约",
+        "可扩展性"
+      ],
+      "questions": [
+        "如何添加新的运行时？"
+      ],
+      "groupBy": "extensionLayer",
+      "orderBy": [
+        "核心",
+        "插件管理",
+        "适配器",
+        "运行时",
+        "扩展"
+      ],
+      "nodeIds": [
+        "orchestrator",
+        "plugin-registry",
+        "host-daemon",
+        "windows-adapter",
+        "multipass-adapter",
+        "docker-adapter",
+        "windows-sandbox",
+        "multipass",
+        "docker",
+        "agent"
+      ],
+      "edgeKinds": [
+        "extends",
+        "uses",
+        "controls",
+        "hosts"
+      ],
+      "status": "ready",
+      "layout": "zones",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "プラグイン契約",
+            "拡張性"
+          ],
+          "questions": [
+            "追加ランタイムをどう接続するか"
+          ],
+          "orderBy": [
+            "中核",
+            "プラグイン管理",
+            "アダプタ",
+            "ランタイム",
+            "拡張"
+          ],
+          "description": "拡張点とアダプタの責務",
+          "title": "拡張・プラグイン",
+          "stakeholders": [
+            "SDK 開発",
+            "アーキテクト"
+          ],
+          "reviewIntent": "拡張点はどの実行環境・信頼ゾーンで動作するか"
+        },
+        "en-US": {
+          "concerns": [
+            "Plugin Contracts",
+            "Extensibility"
+          ],
+          "questions": [
+            "How are new runtimes integrated?"
+          ],
+          "orderBy": [
+            "Core",
+            "Plugin Management",
+            "Adapters",
+            "Runtimes",
+            "Extensions"
+          ],
+          "description": "Extension points and adapter responsibilities",
+          "title": "Extensions & Plugins",
+          "stakeholders": [
+            "SDK Developers",
+            "Architect"
+          ],
+          "reviewIntent": "Where do extension points run across runtimes and trust zones?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "extensionLayer"
+        },
+        "y": {
+          "field": "trustZone"
+        },
+        "z": {
+          "field": "environment"
+        }
+      },
+      "reviewIntent": "扩展点在哪些运行时与信任域内生效？",
+      "axisPolicy": "categorical"
+    },
+    {
+      "id": "reliability",
+      "title": "可靠性与故障恢复",
+      "description": "故障检测、依赖及恢复",
+      "stakeholders": [
+        "SRE",
+        "维护"
+      ],
+      "concerns": [
+        "故障域",
+        "恢复手段"
+      ],
+      "questions": [
+        "检测故障后如何恢复？"
+      ],
+      "groupBy": "failureDomain",
+      "orderBy": [
+        "控制平台",
+        "宿主机",
+        "Windows Sandbox",
+        "Linux VM",
+        "容器",
+        "DB",
+        "存储",
+        "运维"
+      ],
+      "nodeIds": [
+        "gateway",
+        "orchestrator",
+        "scheduler",
+        "host-daemon",
+        "metadata",
+        "artifact",
+        "collector",
+        "alert",
+        "reconciler",
+        "windows-sandbox",
+        "multipass",
+        "docker"
+      ],
+      "edgeKinds": [
+        "publishes",
+        "calls",
+        "exchanges",
+        "controls",
+        "writes"
+      ],
+      "status": "ready",
+      "layout": "layers",
+      "i18n": {
+        "ja-JP": {
+          "concerns": [
+            "障害領域",
+            "復旧手段"
+          ],
+          "questions": [
+            "異常検知からどう復旧するか"
+          ],
+          "orderBy": [
+            "制御基盤",
+            "ホスト",
+            "Windows Sandbox",
+            "Linux VM",
+            "コンテナ",
+            "DB",
+            "ストレージ",
+            "運用"
+          ],
+          "description": "障害を検知し復旧する依存関係",
+          "title": "可用性・障害対応",
+          "stakeholders": [
+            "SRE",
+            "保守"
+          ],
+          "reviewIntent": "障害ドメインと配置環境・実行環境の重なりは何か"
+        },
+        "en-US": {
+          "concerns": [
+            "Failure Domains",
+            "Recovery Mechanisms"
+          ],
+          "questions": [
+            "How are failures detected and recovered?"
+          ],
+          "orderBy": [
+            "Control Platform",
+            "Host",
+            "Windows Sandbox",
+            "Linux VM",
+            "Containers",
+            "DB",
+            "Storage",
+            "Operations"
+          ],
+          "description": "Failure detection and recovery dependencies",
+          "title": "Reliability & Recovery",
+          "stakeholders": [
+            "SRE",
+            "Maintenance"
+          ],
+          "reviewIntent": "Where do failure domains overlap with deployments and runtimes?"
+        }
+      },
+      "dimensions": {
+        "x": {
+          "field": "failureDomain"
+        },
+        "y": {
+          "field": "runtime"
+        },
+        "z": {
+          "field": "domain"
+        }
+      },
+      "reviewIntent": "故障域是否跨越部署环境与运行时？",
+      "axisPolicy": "categorical"
+    }
+  ]
+}
