@@ -1,4 +1,4 @@
-# Install this complete reusable skill into selected agent channels on Windows.
+﻿# Install this complete reusable skill into selected agent channels on Windows.
 #
 # Channel notes:
 #   claude  - ~/.claude/skills          (skill fallback; the plugin channel is the
@@ -9,20 +9,33 @@
 #                                        is ~/.minimax/plugins/<plugin>/.minimax-plugin)
 [CmdletBinding()]
 param(
-    [ValidateSet('claude','codex','hermes','minimax')][string[]]$Agents = @('claude','codex','hermes','minimax'),
+    [string[]]$Agents = @('claude','codex','hermes','minimax'),
     [ValidateSet('software-development','creative','productivity','research','devops')][string]$HermesCategory = 'software-development',
+    [string]$UserHome = [Environment]::GetFolderPath('UserProfile'),
+    [string]$HermesHome = $(if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA 'hermes' } else { Join-Path ([Environment]::GetFolderPath('UserProfile')) '.hermes' }),
     [switch]$Force
 )
 $ErrorActionPreference = 'Stop'
+
+# `powershell -File ... -Agents codex,hermes` arrives as ONE comma-joined string,
+# while an in-session call arrives as a real array. Accept both.
+$knownAgents = @('claude','codex','hermes','minimax')
+$requested = @()
+foreach ($a in $Agents) { $requested += ($a -split ',') }
+$requested = @($requested | ForEach-Object { $_.Trim().ToLowerInvariant() } | Where-Object { $_ })
+$unknown = @($requested | Where-Object { $knownAgents -notcontains $_ })
+if ($unknown.Count -gt 0) {
+    throw "Unknown channel(s): $($unknown -join ', '). Valid values: $($knownAgents -join ', ')"
+}
+$Agents = $requested
+
 $skillRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $skillName = 'ipa-architecture-3d'
-$userHome = [Environment]::GetFolderPath('UserProfile')
-$hermesHome = if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA 'hermes' } else { Join-Path $userHome '.hermes' }
 $paths = [ordered]@{
-    claude  = Join-Path $userHome '.claude\skills'
-    codex   = Join-Path $userHome '.agents\skills'
-    hermes  = Join-Path $hermesHome "skills\$HermesCategory"
-    minimax = Join-Path $userHome '.minimax\skills'
+    claude  = Join-Path $UserHome '.claude\skills'
+    codex   = Join-Path $UserHome '.agents\skills'
+    hermes  = Join-Path $HermesHome "skills\$HermesCategory"
+    minimax = Join-Path $UserHome '.minimax\skills'
 }
 foreach ($agent in $Agents) {
     $base = $paths[$agent]

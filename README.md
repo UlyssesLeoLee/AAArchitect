@@ -9,6 +9,61 @@
 - **Three.js**：内置可复用的 WebGL Viewer **源码**（位于 `skills/ipa-architecture-3d/assets/viewer/`）；按同一架构 JSON 呈现真实 3D 对象和关系、切换 X/Y/Z 分类、正交投影和节点详情。
 - **npm**：第三方 Three.js/Vite 安装为前端构建依赖，并不会因为压缩为 Plugin ZIP 就自动变成离线运行包。正式离线分发需在联网或 npm 缓存完整的环境构建 `dist/`。
 
+## 其他用户如何下载与安装
+
+### 一条命令（Windows）
+
+```powershell
+git clone https://github.com/UlyssesLeoLee/AAArchitect.git
+cd AAArchitect
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+`install.ps1` 会依次处理四个渠道，某个渠道缺少对应 CLI 时自动降级为目录复制而不是整体失败。可用参数：
+
+| 参数 | 说明 |
+| --- | --- |
+| `-Agents claude,codex,hermes,minimax` | 只装指定渠道 |
+| `-Force` | 额外生成 Hermes 的 portable 插件包目录，并覆盖已存在的包 |
+| `-NoCli` | 不调用任何 agent CLI，只做目录/清单投递（CI 与冒烟测试用） |
+| `-UserHome` / `-HermesHome` / `-PluginsRoot` | 覆盖默认目标目录，用于测试或非标准安装位置 |
+
+安装结束后每个 agent 重启一次即可发现新插件/技能。
+
+### 手动安装（任意平台）
+
+四个渠道本质上都是「把 Skill 目录放到对应位置」，复制以下目录即可：
+
+```
+skills/ipa-architecture-3d/          ← 要复制的 Skill 本体
+plugin.json                          ← Agent Plugins v1 清单（仓库根目录）
+.claude-plugin/                      ← Claude Code 插件市场清单
+```
+
+| 渠道 | 目标位置 |
+| --- | --- |
+| Claude Code（插件） | `claude plugin marketplace add <仓库路径>` → `claude plugin install ipa-architecture-3d@aaarchitect` |
+| Claude Code（Skill 回退） | `~/.claude/skills/ipa-architecture-3d/` |
+| Codex | `~/.agents/skills/ipa-architecture-3d/` + `~/.agents/plugins/marketplace.json` |
+| Hermes | `%LOCALAPPDATA%/hermes/skills/<分类>/ipa-architecture-3d/`；插件形态为 `%LOCALAPPDATA%/hermes/plugins/ipa-architecture-3d/` |
+| MiniMax Code | 用 `skills/ipa-architecture-3d/scripts/build_minimax_plugin.ps1` 生成 `%USERPROFILE%/.minimax/plugins/ipa-architecture-3d/` |
+
+macOS / Linux 用户没有 PowerShell 时，直接按上表手动复制目录；MiniMax 包结构也可以手工组装，只要满足 `.minimax-plugin/plugin.json` + `skills/<name>/SKILL.md` + `icon` 即可。
+
+### 远程 URL 安装（无需克隆）
+
+```powershell
+# Claude Code：默认分支必须含 .claude-plugin/marketplace.json
+claude plugin marketplace add UlyssesLeoLee/AAArchitect
+claude plugin install ipa-architecture-3d@aaarchitect
+
+# Hermes：Skill 走 raw URL（URL 里的 main 是仓库默认分支），插件包走 Git URL + 固定 commit
+hermes skills install https://raw.githubusercontent.com/UlyssesLeoLee/AAArchitect/main/skills/ipa-architecture-3d/SKILL.md --category software-development
+hermes plugins install https://github.com/UlyssesLeoLee/AAArchitect.git
+```
+
+`hermes plugins install` 只接受 Git URL 或 `owner/repo`，不接受本地路径；需要固定版本时加 `--ref <40位 commit SHA>`。
+
 ## 四个插件渠道的安装方式
 
 本仓库同时是 **Agent Plugins v1 portable 包**（根目录 `plugin.json` + `skills/`）和 **Claude Code 插件市场源**（`.claude-plugin/`），因此同一份内容可以投放到下面四个渠道。
@@ -54,12 +109,14 @@ Hermes 的 Skill 根目录是 `$env:LOCALAPPDATA\hermes\skills\<分类>\`，不�
 ### 4. MiniMax Code —— 本地插件包
 
 ```powershell
-claude plugin validate --strict .   # 复用同一份源文件
+.\skills\ipa-architecture-3d\scripts\build_minimax_plugin.ps1
 ```
 
-把仓库内容组装为 MiniMax 插件包（`.minimax-plugin/plugin.json` + `skills/<name>/SKILL.md` + `icon.png`），放到 `C:\Users\<用户>\.minimax\plugins\ipa-architecture-3d\`，MiniMax Code 会自动重扫识别。注意：包根目录**不要**放 Agent Plugins v1 的 `plugin.json`，否则会覆盖 MiniMax 格式；只用 `.minimax-plugin/plugin.json`。
+脚本从仓库内容组装 MiniMax 插件包（`.minimax-plugin/plugin.json` + `skills/<name>/SKILL.md` + 明暗图标），写入 `%USERPROFILE%\.minimax\plugins\ipa-architecture-3d\`，MiniMax Code 自动重扫识别。图标优先取本机 MiniMax 自带的分类图标池，取不到时自动生成占位图，因此在没装 MiniMax 的机器上也能构建。版本号与描述直接读仓库根目录 `plugin.json`，不会与源文件脱节。
 
-### 统一 Skill 安装脚本（四个渠道通用）
+注意：包根目录**不要**放 Agent Plugins v1 的 `plugin.json`，否则会覆盖 MiniMax 格式；只用 `.minimax-plugin/plugin.json`。
+
+### 只装 Skill（不装插件包）
 
 ```powershell
 cd .\skills\ipa-architecture-3d
@@ -67,7 +124,9 @@ cd .\skills\ipa-architecture-3d
 .\scripts\install_windows.ps1 -Agents claude,codex,hermes,minimax -Force   # 覆盖前自动备份
 ```
 
-`hermes` 和 `minimax` 在这里是 **Skill 回退通道**（`$env:LOCALAPPDATA\hermes\skills\<分类>\` 和 `~/.minimax/skills/`），不是它们各自的插件包机制。
+这条路径只做 Skill 目录投递：`hermes` 和 `minimax` 在这里是 **Skill 回退通道**（`$env:LOCALAPPDATA\hermes\skills\<分类>\` 和 `~/.minimax/skills/`），不是它们各自的插件包机制。需要完整插件包请用仓库根目录的 `install.ps1`。
+
+> Windows PowerShell 5.1 注意事项：仓库内 `.ps1` 文件带 UTF-8 BOM。手动编辑后若删掉 BOM，脚本里的中文字面量会被按 ANSI 解析并导致语法错误。
 
 
 ## 生成真正的 Three.js 网站
