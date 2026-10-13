@@ -9,33 +9,71 @@
 - **Three.js**：内置可复用的 WebGL Viewer **源码**（位于 `skills/ipa-architecture-3d/assets/viewer/`）；按同一架构 JSON 呈现真实 3D 对象和关系、切换 X/Y/Z 分类、正交投影和节点详情。
 - **npm**：第三方 Three.js/Vite 安装为前端构建依赖，并不会因为压缩为 Plugin ZIP 就自动变成离线运行包。正式离线分发需在联网或 npm 缓存完整的环境构建 `dist/`。
 
-## Claude Code 本地加载（无需提交 Marketplace）
+## 四个插件渠道的安装方式
+
+本仓库同时是 **Agent Plugins v1 portable 包**（根目录 `plugin.json` + `skills/`）和 **Claude Code 插件市场源**（`.claude-plugin/`），因此同一份内容可以投放到下面四个渠道。
+
+### 1. Claude Code —— 本地插件市场（推荐）
 
 ```powershell
-claude --plugin-dir "E:\tools\ipa-architecture-3d-plugin"
+claude plugin validate --strict .
+claude plugin marketplace add .
+claude plugin install ipa-architecture-3d@aaarchitect
+claude plugin list
 ```
 
-解压时保留 `plugin.json`、`.claude-plugin/` 和 `skills/` 的相对路径。只在信任这些脚本与依赖时安装。参见 https://code.claude.com/docs/en/plugins 。
+`marketplace add` 接受仓库目录，所以插件内容始终跟随仓库更新，不需要每次重新安装。仓库推到 GitHub 之后也可以改用 `claude plugin marketplace add UlyssesLeoLee/AAArchitect`。若只想临时加载单个目录而不注册市场，用 `claude --plugin-dir "<仓库路径>"`。参见 https://code.claude.com/docs/en/plugins 。
 
-## Codex 私有 Plugin
-
-使用官方本地 Marketplace 机制：将插件目录放在仓库 `plugins/ipa-architecture-3d/`，再将 `integration-examples/codex-marketplace.json` 内容存为仓库 `.agents/plugins/marketplace.json`，重启支持 Plugin 的 Codex 主机，在 Plugin Directory 中从 `local-architecture` 安装/启用。此操作不需要公开发布到市场。
-
-如果当前 Codex 版本仅支持直接 Skill，则运行独立 Skill 安装脚本即可。不要把 `plugin.json` 误认为 npm/浏览器加载清单。
-
-## Hermes / 独立 Skill 安装
+### 2. Codex —— Skill + 私有市场清单
 
 ```powershell
-cd E:\tools\ipa-architecture-3d-plugin\skills\ipa-architecture-3d
-.\scripts\install_windows.ps1 -Agents claude,codex,hermes -Force
+Copy-Item .\integration-examples\codex-marketplace.json "$HOME\.agents\plugins\marketplace.json"
 ```
 
-注意：这是 Skill 兼容性安装路径，不是通用 Hermes Plugin API。
+同时把 Skill 目录放到 `$HOME\.agents\skills\ipa-architecture-3d\`（见下方统一脚本）。`marketplace.json` 里的 `source.path` 是仓库根目录，因为根目录本身就是插件包；需要指向别处时把它改成绝对路径。
+
+### 3. Hermes —— portable v1 插件目录 + Skill
+
+```powershell
+hermes plugins validate .
+git clone --no-hardlinks . "$env:LOCALAPPDATA\hermes\plugins\ipa-architecture-3d"
+hermes plugins show ipa-architecture-3d
+hermes plugins enable ipa-architecture-3d
+```
+
+Hermes 扫描 `$env:LOCALAPPDATA\hermes\plugins\<插件名>\`，根目录 `plugin.json` 会作为 portable Agent Plugins v1 包被发现。`hermes plugins doctor <路径>` 可在不启用的情况下验证运行时契约。portable 包默认处于禁用状态，需要 `hermes plugins enable`；该步骤会触发 PM 的 venv 同步。
+
+Skill 通道（不经过 PM）：
+
+```powershell
+hermes skills list
+```
+
+Hermes 的 Skill 根目录是 `$env:LOCALAPPDATA\hermes\skills\<分类>\`，不是 `~/.hermes/skills`。
+
+### 4. MiniMax Code —— 本地插件包
+
+```powershell
+claude plugin validate --strict .   # 复用同一份源文件
+```
+
+把仓库内容组装为 MiniMax 插件包（`.minimax-plugin/plugin.json` + `skills/<name>/SKILL.md` + `icon.png`），放到 `C:\Users\<用户>\.minimax\plugins\ipa-architecture-3d\`，MiniMax Code 会自动重扫识别。注意：包根目录**不要**放 Agent Plugins v1 的 `plugin.json`，否则会覆盖 MiniMax 格式；只用 `.minimax-plugin/plugin.json`。
+
+### 统一 Skill 安装脚本（四个渠道通用）
+
+```powershell
+cd .\skills\ipa-architecture-3d
+.\scripts\install_windows.ps1 -Agents claude,codex,hermes,minimax
+.\scripts\install_windows.ps1 -Agents claude,codex,hermes,minimax -Force   # 覆盖前自动备份
+```
+
+`hermes` 和 `minimax` 在这里是 **Skill 回退通道**（`$env:LOCALAPPDATA\hermes\skills\<分类>\` 和 `~/.minimax/skills/`），不是它们各自的插件包机制。
+
 
 ## 生成真正的 Three.js 网站
 
 ```powershell
-cd E:\tools\ipa-architecture-3d-plugin\skills\ipa-architecture-3d
+cd .\skills\ipa-architecture-3d
 python .\scripts\validate.py .\assets\examples\illustrative-architecture.json
 python .\scripts\build.py .\assets\examples\illustrative-architecture.json --out E:\arch3d-cn
 # 需要日语时：追加 --lang ja-JP
@@ -60,7 +98,7 @@ npm run dev
 ## 无需 npm 的模型验证
 
 ```powershell
-cd E:\tools\ipa-architecture-3d-plugin\skills\ipa-architecture-3d
+cd .\skills\ipa-architecture-3d
 python -m unittest discover -s tests -v
 node --test .\assets\viewer\tests\layout.test.mjs
 ```

@@ -1,14 +1,14 @@
 {
   "name": "local-architecture",
   "interface": {
-    "displayName": "Private Architecture Tools"
+    "displayName": "AAArchitect Local Plugin Channel"
   },
   "plugins": [
     {
       "name": "ipa-architecture-3d",
       "source": {
         "source": "local",
-        "path": "./plugins/ipa-architecture-3d"
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "aaarchitect",
+  "description": "IPA Architecture 3D — 真实 Three.js 三维多视图架构网站生成 Skill（IPA 参考 / ISO 42010 审查视角）",
+  "owner": {
+    "name": "Ulysses Leo Lee",
+    "url": "https://github.com/UlyssesLeoLee/AAArchitect"
+  },
+  "plugins": [
+    {
+      "name": "ipa-architecture-3d",
+      "description": "将需求/设计/源码/架构 JSON 生成真实 Three.js WebGL 三维交互架构网站：X/Y/Z 编码真实可追溯属性，12 种可选 View，正交投影与证据审查。默认简体中文，支持 --lang ja-JP/en-US。",
+      "author": {
+        "name": "Ulysses Leo Lee"
+      },
+      "category": "development",
+      "homepage": "https://github.com/UlyssesLeoLee/AAArchitect",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "threejs",
+        "webgl",
+        "ipa",
+        "3d"
+      ],
+      "source": "./"
+    }
+  ]
+}

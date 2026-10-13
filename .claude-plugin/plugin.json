@@ -1,5 +1,17 @@
 {
   "name": "ipa-architecture-3d",
   "version": "2.0.0",
-  "description": "真实 Three.js/WebGL 架构图生成 + 多语种 + 空间证据审查。"
+  "description": "真实 Three.js/WebGL 架构图生成 + 多语种 + 空间证据审查。",
+  "author": {
+    "name": "Ulysses Leo Lee"
+  },
+  "homepage": "https://github.com/UlyssesLeoLee/AAArchitect",
+  "license": "MIT",
+  "keywords": [
+    "architecture",
+    "threejs",
+    "webgl",
+    "ipa",
+    "3d"
+  ]
 }
