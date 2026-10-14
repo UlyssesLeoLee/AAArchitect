@@ -105,7 +105,13 @@ Hermes 扫描 `$env:LOCALAPPDATA\hermes\plugins\<插件名>\`，根目录 `plugi
 hermes plugins install https://github.com/UlyssesLeoLee/AAArchitect.git --force
 ```
 
-实测的 6 项发现逐条核对后全部是启发式误报：
+当前实测只有 **1 项** finding，逐条核对为启发式误报：
+
+| 判据 | 位置 | 实际情况 |
+| --- | --- | --- |
+| `inline_shell_exec` | `assets/viewer/src/main.js`（`root.replaceChildren()`） | DOM 元素清空方法，被 shell 执行启发式误判。全文件不调用 `exec`/`eval`/`spawn`，也无任何进程创建；所有文本均通过 `textContent` 写入，不存在 HTML 注入 |
+
+早期的 6 项 finding 中，README 里的 `git clone` 文案、`i18n.js` 的中日文字面量、SKILL.md 的 npm 构建步骤，随文档改写已不再触发。该拦截由启发式规则驱动，finding 数量会随源码变化，**以你本机 `hermes plugins validate .` 的实际输出为准**。
 
 | 判据 | 位置 | 实际情况 |
 | --- | --- | --- |
