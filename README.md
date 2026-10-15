@@ -1,5 +1,5 @@
 **本项目定义下的维度：统一主体，互不干涉。**
-<img width="1254" height="1254" alt="因果五维能量核心" src="https://github.com/user-attachments/assets/4d426f38-a583-402f-8078-4df85871660c" />
+
 # GemArc
 
 **GemArc — Causal Architecture Visualization**
@@ -11,7 +11,7 @@ GemArc 是一个面向 AI Agent 的多维架构建模与可视化插件。它将
 默认语言为**简体中文（`zh-CN`）**，可通过 `--lang ja-JP` 或 `--lang en-US` 切换，并允许扩展语言字典。
 
 GemArc 参考日本 IPA 相关资料与 ISO/IEC/IEEE 42010:2022 的架构描述原则，不宣称获得 IPA 官方认证，也不将 12 种 View 视为 IPA 强制标准。
-
+<img width="1254" height="1254" alt="因果五维能量核心" src="https://github.com/user-attachments/assets/4d426f38-a583-402f-8078-4df85871660c" />
 ---
 
 ## 1. 设计哲学
